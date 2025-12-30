@@ -57,7 +57,8 @@ const LoginPage = () => {
         </form>
         
         <p style={{marginTop: '15px', fontSize: '0.9rem', textAlign: 'center'}}>
-           Belum punya akun? <span style={{color: 'blue', cursor: 'pointer'}}>Daftar di sini</span>
+            Belum punya akun? <Link to="/register" style={{color: 'blue', cursor: 'pointer', textDecoration: 'none', fontWeight: 'bold'}}>
+            Daftar di sini</Link>
         </p>
       </div>
     </div>
