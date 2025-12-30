@@ -33,8 +33,6 @@ const Navbar = () => {
                 <>
                   {/* Menu Booking */}
                   <Link to="/admin/bookings" style={styles.link}>📄 Pesanan</Link>
-                  {/* Menu Kamar */}
-                  <Link to="/rooms" style={styles.link}>🏠 Kamar</Link>
                 </>
               )}
 
