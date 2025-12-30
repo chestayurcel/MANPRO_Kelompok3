@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAllBookings, updateBookingStatus } from '../services/bookingService';
+import { Link } from 'react-router-dom';
 
 const AdminBookingPage = () => {
   const [bookings, setBookings] = useState([]);
@@ -34,7 +35,11 @@ const AdminBookingPage = () => {
 
   return (
     <div style={{ maxWidth: '1000px', margin: '40px auto', padding: '20px' }}>
-      <h1>📋 Persetujuan Booking Masuk</h1>
+      
+      {/* 2. TOMBOL KEMBALI */}
+      <Link to="/rooms" style={btnBack}>&larr; Kembali ke Daftar Kamar</Link>
+
+      <h1 style={{marginTop: '10px'}}>📋 Persetujuan Booking Masuk</h1>
       
       <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
         <thead style={{ background: '#333', color: 'white' }}>
@@ -88,6 +93,9 @@ const AdminBookingPage = () => {
 };
 
 const p = { padding: '15px', textAlign: 'left', verticalAlign: 'middle' };
+// 3. STYLE TOMBOL BACK
+const btnBack = { display: 'inline-block', marginBottom: '10px', textDecoration: 'none', color: '#555', fontWeight: 'bold', fontSize: '1rem' };
+
 const btnApprove = { padding: '8px 12px', background: '#2ecc71', color: 'white', border:'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' };
 const btnReject = { padding: '8px 12px', background: '#e74c3c', color: 'white', border:'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' };
 
