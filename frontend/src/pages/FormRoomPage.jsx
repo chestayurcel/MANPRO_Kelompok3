@@ -47,7 +47,7 @@ const FormRoomPage = () => {
             await createRoom(formData);
             alert('Kamar berhasil dibuat!');
         }
-        navigate('/admin/dashboard');
+        navigate('/rooms');
     } catch (error) {
         alert('Gagal menyimpan data');
     }
