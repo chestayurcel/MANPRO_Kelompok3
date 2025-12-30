@@ -24,7 +24,7 @@ const AdminDashboard = () => {
 
   return (
     <div style={{ maxWidth: '1000px', margin: '20px auto', padding: '20px' }}>
-        <Link to="/" style={btnStyle.back}>&larr; Kembali ke Home</Link>
+        <Link to="/rooms" style={btnStyle.back}>&larr; Kembali ke Home</Link>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
         <h1>Dashboard Admin</h1>
         <Link to="/admin/rooms/new" style={btnStyle.add}>+ Tambah Kamar</Link>
