@@ -1,9 +1,7 @@
 // frontend/src/pages/DetailRoomPage.jsx
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom'; // PENTING: useNavigate
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
-// PENTING: Jangan lupa import service ini!
 import { getRoomDetail } from '../services/roomService'; 
 import { getCurrentUser } from '../services/authService';
 
@@ -75,7 +73,7 @@ const DetailRoomPage = () => {
 
   return (
     <div style={styles.container}>
-      <Link to="/" style={styles.backButton}>&larr; Kembali</Link>
+      <Link to="/rooms" style={styles.backButton}>&larr; Kembali</Link>
       
       <div style={styles.grid}>
         {/* Kolom Kiri: Foto */}
