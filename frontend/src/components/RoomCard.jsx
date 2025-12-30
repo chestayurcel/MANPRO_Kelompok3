@@ -19,6 +19,12 @@ const RoomCard = ({ room }) => {
     }
   };
 
+  const getBadgeStyle = (status) => {
+      if (status === 'tersedia') return styles.badgeGreen;
+      if (status === 'terisi') return styles.badgeRed;
+      return styles.badgeYellow; // Untuk 'pending' atau 'perbaikan'
+  };
+
   return (
     <div style={styles.card}>
       <img 
@@ -29,8 +35,8 @@ const RoomCard = ({ room }) => {
       <div style={styles.content}>
         <div style={styles.header}>
             <h3 style={styles.title}>Kamar {room.nomor_kamar}</h3>
-            <span style={room.status === 'tersedia' ? styles.badgeGreen : styles.badgeRed}>
-                {room.status}
+            <span style={getBadgeStyle(room.status)}>
+                {room.status.toUpperCase()}
             </span>
         </div>
         <p style={styles.type}>{room.tipe}</p>
