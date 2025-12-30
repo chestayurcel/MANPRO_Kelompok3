@@ -39,6 +39,14 @@ const RoomCard = ({ room }) => {
                 {room.status.toUpperCase()}
             </span>
         </div>
+        {/* NAMA PENYEWA */}
+        {/* Hanya muncul jika: ADMIN + Kamar TERISI + Ada Data Bookingnya */}
+        {user && user.role === 'admin' && room.status === 'terisi' && room.Bookings && room.Bookings.length > 0 && (
+            <div style={styles.tenantInfo}>
+                👤 Penyewa: <strong>{room.Bookings[0].User ? room.Bookings[0].User.nama : 'Loading...'}</strong>
+            </div>
+        )}
+
         <p style={styles.type}>{room.tipe}</p>
         <p style={styles.price}>Rp {room.harga_per_bulan.toLocaleString('id-ID')} / bulan</p>
         <p style={styles.facilities}>{room.fasilitas}</p>
@@ -137,6 +145,18 @@ const styles = {
     borderRadius: '5px',
     cursor: 'pointer',
     fontWeight: 'bold'
+  },
+  tenantInfo: {
+    backgroundColor: '#e3f2fd',
+    color: '#1565c0',
+    padding: '8px 10px',
+    borderRadius: '5px',
+    fontSize: '0.9rem',
+    marginBottom: '10px',
+    border: '1px solid #90caf9',
+    display: 'inline-block',
+    width: '100%',
+    boxSizing: 'border-box'
   }
 };
 

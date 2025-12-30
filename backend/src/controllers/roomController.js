@@ -1,20 +1,30 @@
 // backend/src/controllers/roomController.js
 const roomService = require('../services/roomService');
-const { Room } = require('../models');
+const { Room, Booking, User } = require('../models');
 
 const getRooms = async (req, res) => {
     try {
-        const rooms = await roomService.getAllRooms();
-        res.status(200).json({
-            success: true,
-            data: rooms
+        const rooms = await Room.findAll({
+            include: [
+                {
+                    model: Booking,
+                    // Filter: Ambil booking yang statusnya 'lunas' (penyewa aktif)
+                    where: { status_pembayaran: 'lunas' },
+                    required: false, // PENTING: Agar kamar kosong tetap muncul
+                    limit: 1, // Ambil 1 penyewa terakhir
+                    order: [['updatedAt', 'DESC']], // Yang paling baru
+                    include: [
+                        { 
+                            model: User, 
+                            attributes: ['nama'] // Ambil namanya saja
+                        }
+                    ]
+                }
+            ]
         });
+        res.status(200).json(rooms);
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Gagal mengambil data kamar',
-            error: error.message
-        });
+        res.status(500).json({ message: error.message });
     }
 };
 
