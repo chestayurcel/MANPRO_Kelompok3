@@ -78,7 +78,7 @@ const FormRoomPage = () => {
         </select>
 
         <button type="submit" style={{ padding: '10px', background: 'green', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Simpan</button>
-        <Link to="/admin/dashboard" style={{ textAlign: 'center', textDecoration: 'none', color: '#555' }}>Batal</Link>
+        <Link to="/rooms" style={{ textAlign: 'center', textDecoration: 'none', color: '#555' }}>Batal</Link>
       </form>
     </div>
   );
