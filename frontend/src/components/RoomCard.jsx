@@ -39,7 +39,7 @@ const RoomCard = ({ room }) => {
 
         {user && user.role === 'admin' ? (
           <div style={{display: 'flex', gap: '10px', marginTop: '10px'}}>
-            // TOMBOL ADMIN: Edit dan Hapus
+            {/* TOMBOL ADMIN: Edit & Hapus */}
             <Link to={`/admin/rooms/edit/${room.id}`} style={{ textDecoration: 'none' }}>
                 <button style={{...styles.button, backgroundColor: '#f39c12'}}>Edit Kamar</button>
             </Link>
