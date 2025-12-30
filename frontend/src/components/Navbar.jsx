@@ -16,14 +16,13 @@ const Navbar = () => {
   return (
     <nav style={styles.nav}>
       <div style={styles.container}>
-        {/* LOGO / BRAND */}
-        <Link to="/" style={styles.brand}>
+        {/* LOGO */}
+        <Link to={user ? "/rooms" : "/"} style={styles.brand}>
           🏠 Permata Kost
         </Link>
 
         {/* MENU KANAN */}
         <div style={styles.menu}>
-            <Link to="/rooms" style={styles.link}>🏠 Daftar Kamar</Link>
           {user ? (
             // TAMPILAN JIKA SUDAH LOGIN
             <>
@@ -44,7 +43,7 @@ const Navbar = () => {
               </button>
             </>
           ) : (
-            // TAMPILAN JIKA BELUM LOGIN
+            // TAMPILAN JIKA BELUM LOGIN (Guest)
             <Link to="/login" style={styles.loginBtn}>
               Login
             </Link>
