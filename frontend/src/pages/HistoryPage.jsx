@@ -24,7 +24,7 @@ const HistoryPage = () => {
 
   return (
     <div style={styles.container}>
-    <Link to="/" style={styles.backButton}>&larr; Kembali ke Home</Link>
+    <Link to="/rooms" style={styles.backButton}>&larr; Kembali ke Home</Link>
       <h1 style={styles.title}>Riwayat Booking Saya</h1>
       
       {bookings.length === 0 ? (
