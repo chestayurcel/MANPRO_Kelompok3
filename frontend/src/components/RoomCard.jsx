@@ -2,9 +2,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { getCurrentUser } from '../services/authService';
+import { deleteRoom } from '../services/roomService';
 
 const RoomCard = ({ room }) => {
     const user = getCurrentUser();
+
+    const handleDelete = async () => {
+    if (window.confirm(`Yakin ingin menghapus Kamar ${room.nomor_kamar} selamanya?`)) {
+      try {
+        await deleteRoom(room.id);
+        alert('Kamar berhasil dihapus');
+        window.location.reload(); // Refresh halaman agar kartu hilang
+      } catch (error) {
+        alert('Gagal menghapus kamar');
+      }
+    }
+  };
 
   return (
     <div style={styles.card}>
@@ -25,12 +38,20 @@ const RoomCard = ({ room }) => {
         <p style={styles.facilities}>{room.fasilitas}</p>
 
         {user && user.role === 'admin' ? (
-            // JIKA ADMIN: Tombolnya lari ke Edit Page
+          <div style={{display: 'flex', gap: '10px', marginTop: '10px'}}>
+            // TOMBOL ADMIN: Edit dan Hapus
             <Link to={`/admin/rooms/edit/${room.id}`} style={{ textDecoration: 'none' }}>
                 <button style={{...styles.button, backgroundColor: '#f39c12'}}>Edit Kamar</button>
             </Link>
+            
+            <button 
+                onClick={handleDelete}
+                style={{...styles.button, backgroundColor: '#c0392b', flex: 1}}
+            >Hapus Kamar
+            </button>
+            </div>
         ) : (
-            // JIKA BUKAN ADMIN: Tombolnya Lihat Detail
+            // TOMBOL BUKAN ADMIN(Penghuni): Lihat Detail
             <Link to={`/room/${room.id}`} style={{ textDecoration: 'none' }}>
                 <button style={styles.button}>Lihat Detail</button>
             </Link>
@@ -40,7 +61,6 @@ const RoomCard = ({ room }) => {
   );
 };
 
-// Styling sederhana pakai object CSS (bisa diganti CSS modules nanti)
 const styles = {
   card: {
     backgroundColor: 'white',
