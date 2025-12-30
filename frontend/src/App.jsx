@@ -18,6 +18,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/rooms" element={<RoomListPage />} />
         <Route path="/room/:id" element={<DetailRoomPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/history" element={<HistoryPage />} />
 
