@@ -32,7 +32,7 @@ const Navbar = () => {
               {user.role === 'admin' && (
                 <>
                   {/* Menu Booking */}
-                  <Link to="/admin/bookings" style={styles.link}>📄 Pesanan</Link>
+                  <Link to="/admin/bookings" style={styles.link}>Booking/Pesanan Masuk</Link>
                 </>
               )}
 
