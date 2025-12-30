@@ -111,18 +111,22 @@ const styles = {
       marginBottom: '15px'
   },
   badgeGreen: {
-      backgroundColor: '#d4edda',
-      color: '#155724',
-      padding: '5px 10px',
-      borderRadius: '20px',
-      fontSize: '0.8rem'
+    backgroundColor: '#2ecc71',
+    color: 'white',
+    padding: '5px 10px',
+    borderRadius: '15px',
+    fontSize: '0.8rem'
   },
   badgeRed: {
-      backgroundColor: '#f8d7da',
-      color: '#721c24',
-      padding: '5px 10px',
-      borderRadius: '20px',
-      fontSize: '0.8rem'
+    backgroundColor: '#e74c3c',
+    color: 'white', padding: '5px 10px',
+    borderRadius: '15px',
+    fontSize: '0.8rem'
+  },
+  badgeYellow: {
+    backgroundColor: '#f1c40f',
+    color: 'white', padding: '5px 10px',
+    borderRadius: '15px', fontSize: '0.8rem'
   },
   button: {
     width: '100%',
