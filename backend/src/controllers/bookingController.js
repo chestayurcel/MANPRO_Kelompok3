@@ -30,8 +30,7 @@ const createBooking = async (req, res) => {
             status_pembayaran: 'pending' // Default status menunggu persetujuan admin
         });
 
-        // Update Status Kamar menjadi 'terisi' agar tidak dibooking orang lain
-        await Room.update({ status: 'terisi' }, { where: { id: roomId } });
+        await Room.update({ status: 'pending' }, { where: { id: roomId } });
 
         res.status(201).json({ 
             success: true, 
