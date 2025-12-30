@@ -27,7 +27,7 @@ const RoomCard = ({ room }) => {
         {user && user.role === 'admin' ? (
             // JIKA ADMIN: Tombolnya lari ke Edit Page
             <Link to={`/admin/rooms/edit/${room.id}`} style={{ textDecoration: 'none' }}>
-                <button style={{...styles.button, backgroundColor: '#f39c12'}}>Edit Data</button>
+                <button style={{...styles.button, backgroundColor: '#f39c12'}}>Edit Kamar</button>
             </Link>
         ) : (
             // JIKA BUKAN ADMIN: Tombolnya Lihat Detail
