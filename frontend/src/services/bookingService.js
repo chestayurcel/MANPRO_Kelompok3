@@ -19,3 +19,20 @@ export const getMyBookings = async () => {
     throw error;
   }
 };
+
+const getAuthHeader = () => {
+    const token = localStorage.getItem('token');
+    return { headers: { Authorization: `Bearer ${token}` } };
+};
+
+// 1. Ambil Semua Booking (Admin)
+export const getAllBookings = async () => {
+    const response = await axios.get(`${API_URL}/all`, getAuthHeader());
+    return response.data.data;
+};
+
+// 2. Update Status Booking (Admin)
+export const updateBookingStatus = async (id, status) => {
+    // status dikirim sebagai object { status: 'lunas' } atau { status: 'batal' }
+    await axios.put(`${API_URL}/${id}`, { status }, getAuthHeader());
+};

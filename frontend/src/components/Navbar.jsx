@@ -28,7 +28,17 @@ const Navbar = () => {
             <>
               <span style={styles.welcome}>Halo, <b>{user.nama}</b></span>
               
-              {/* MENU KHUSUS PENGHUNI (Hanya muncul jika role = penghuni) */}
+              {/* Menu Admin */}
+              {user.role === 'admin' && (
+                <>
+                  {/* Menu Booking */}
+                  <Link to="/admin/bookings" style={styles.link}>📄 Pesanan</Link>
+                  {/* Menu Kamar */}
+                  <Link to="/rooms" style={styles.link}>🏠 Kamar</Link>
+                </>
+              )}
+
+              {/* MENU KHUSUS PENGHUNI */}
               {user.role === 'penghuni' && (
                 <Link to="/history" style={styles.link}>Riwayat</Link> 
               )}
