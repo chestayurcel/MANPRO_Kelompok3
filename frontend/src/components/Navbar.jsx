@@ -32,11 +32,6 @@ const Navbar = () => {
               {user.role === 'penghuni' && (
                 <Link to="/history" style={styles.link}>Riwayat</Link> 
               )}
-
-              {/* MENU KHUSUS ADMIN (Hanya muncul jika role = admin) */}
-              {user.role === 'admin' && (
-                <Link to="/admin/dashboard" style={{...styles.link, color: 'red'}}>Dashboard</Link>
-              )}
               
               <button onClick={handleLogout} style={styles.logoutBtn}>
                 Logout
