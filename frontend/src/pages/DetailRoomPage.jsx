@@ -96,12 +96,16 @@ const DetailRoomPage = () => {
             <div style={styles.divider}></div>
 
             <h3>Status:</h3>
-            <p style={{color: room.status === 'tersedia' ? 'green' : 'red', fontWeight: 'bold'}}>
+            <p style={{
+                color: room.status === 'tersedia' ? 'green' : 
+                       room.status === 'terisi' ? 'red' : '#f39c12', // Kuning untuk pending
+                fontWeight: 'bold',
+                fontSize: '1.2rem'
+            }}>
                 {room.status.toUpperCase()}
             </p>
 
             {/* Tombol Aksi */}
-            {/* Jika User adalah ADMIN, Tampilkan tombol Edit atau Hilangkan sama sekali */}
             {user && user.role === 'admin' ? (
                 <div style={{marginTop: '30px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px', textAlign: 'center', border: '1px solid #ddd'}}>
                     <p style={{color: '#555', marginBottom: '10px'}}>Anda melihat halaman ini sebagai <b>Admin</b>.</p>
@@ -123,7 +127,8 @@ const DetailRoomPage = () => {
                     disabled={room.status !== 'tersedia'}
                     onClick={handleBooking} 
                 >
-                    {room.status === 'tersedia' ? 'Ajukan Sewa Sekarang' : 'Kamar Penuh'}
+                    {room.status === 'tersedia' ? 'Ajukan Sewa Sekarang' : 
+                     room.status === 'pending' ? 'Menunggu Persetujuan' : 'Kamar Penuh'}
                 </button>
             )}
         </div>
