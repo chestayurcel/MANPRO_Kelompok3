@@ -8,6 +8,7 @@ import HistoryPage from './pages/HistoryPage';
 import AdminDashboard from './pages/AdminDashboard';
 import FormRoomPage from './pages/FormRoomPage';
 import LandingPage from './pages/LandingPage';
+import RegisterPage from './pages/RegisterPage';
 
 function App() {
   return (
