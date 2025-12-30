@@ -8,21 +8,22 @@ const getRooms = async (req, res) => {
             include: [
                 {
                     model: Booking,
-                    // Filter: Ambil booking yang statusnya 'lunas' (penyewa aktif)
                     where: { status_pembayaran: 'lunas' },
-                    required: false, // PENTING: Agar kamar kosong tetap muncul
-                    limit: 1, // Ambil 1 penyewa terakhir
-                    order: [['updatedAt', 'DESC']], // Yang paling baru
+                    required: false, 
+                    limit: 1, 
+                    order: [['updatedAt', 'DESC']], 
                     include: [
                         { 
                             model: User, 
-                            attributes: ['nama'] // Ambil namanya saja
+                            attributes: ['nama'] 
                         }
                     ]
                 }
             ]
         });
-        res.status(200).json(rooms);
+        
+        res.status(200).json({ success: true, data: rooms }); 
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
