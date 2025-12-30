@@ -20,7 +20,7 @@ const Room = db.define('Room', {
         allowNull: true
     },
     status: {
-        type: DataTypes.ENUM('tersedia', 'terisi', 'perbaikan'),
+        type: DataTypes.ENUM('tersedia', 'terisi', 'perbaikan', 'pending'),
         defaultValue: 'tersedia'
     },
     foto_url: {
