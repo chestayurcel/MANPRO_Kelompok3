@@ -1,44 +1,76 @@
-// frontend/src/components/Navbar.jsx
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser, logoutUser } from '../services/authService';
+import { getAllBookings } from '../services/bookingService';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const user = getCurrentUser(); // Ambil data user dari local storage
+  const location = useLocation(); // Agar navbar ter-update saat pindah halaman
+  const user = getCurrentUser();
+
+  // State untuk menghitung jumlah pending
+  const [pendingCount, setPendingCount] = useState(0);
 
   const handleLogout = () => {
     logoutUser();
-    alert('Anda berhasil logout');
     navigate('/login');
   };
+
+  // --- EFEK UNTUK CEK NOTIFIKASI (KHUSUS ADMIN) ---
+  useEffect(() => {
+    // Hanya jalankan jika user adalah ADMIN
+    if (user && user.role === 'admin') {
+        const fetchNotification = async () => {
+            try {
+                const data = await getAllBookings();
+                // Hitung berapa yang statusnya 'pending'
+                const count = data.filter(item => item.status_pembayaran === 'pending').length;
+                setPendingCount(count);
+            } catch (error) {
+                console.error("Gagal mengambil notifikasi");
+            }
+        };
+
+        fetchNotification();
+
+        // (Opsional) Cek otomatis setiap 5 detik agar realtime
+        const interval = setInterval(fetchNotification, 5000);
+        return () => clearInterval(interval);
+    }
+  }, [user, location.pathname]); // Update saat user berubah atau pindah halaman
 
   return (
     <nav style={styles.nav}>
       <div style={styles.container}>
-        {/* LOGO */}
         <Link to={user ? "/rooms" : "/"} style={styles.brand}>
           🏠 Permata Kost
         </Link>
 
-        {/* MENU KANAN */}
         <div style={styles.menu}>
           {user ? (
-            // TAMPILAN JIKA SUDAH LOGIN
             <>
               <span style={styles.welcome}>Halo, <b>{user.nama}</b></span>
               
+              {/* Menu Penghuni */}
+              {user.role === 'penghuni' && (
+                <Link to="/history" style={styles.link}>Riwayat</Link> 
+              )}
+
               {/* Menu Admin */}
               {user.role === 'admin' && (
                 <>
-                  {/* Menu Booking */}
-                  <Link to="/admin/bookings" style={styles.link}>Booking/Pesanan Masuk</Link>
-                </>
-              )}
+                  {/* --- 3. MODIFIKASI MENU PESANAN DENGAN BADGE --- */}
+                  <Link to="/admin/bookings" style={styles.linkContainer}>
+                    📄 Pesanan
+                    {pendingCount > 0 && (
+                        <span style={styles.notificationBadge}>
+                            {pendingCount}
+                        </span>
+                    )}
+                  </Link>
 
-              {/* MENU KHUSUS PENGHUNI */}
-              {user.role === 'penghuni' && (
-                <Link to="/history" style={styles.link}>Riwayat</Link> 
+                  <Link to="/rooms" style={styles.link}>🏠 Kamar</Link>
+                </>
               )}
               
               <button onClick={handleLogout} style={styles.logoutBtn}>
@@ -46,10 +78,9 @@ const Navbar = () => {
               </button>
             </>
           ) : (
-            // TAMPILAN JIKA BELUM LOGIN (Guest)
-            <Link to="/login" style={styles.loginBtn}>
-              Login
-            </Link>
+            <>
+               <Link to="/login" style={styles.loginBtn}>Login</Link>
+            </>
           )}
         </div>
       </div>
@@ -57,7 +88,6 @@ const Navbar = () => {
   );
 };
 
-// Styling Navbar
 const styles = {
   nav: {
     backgroundColor: '#fff',
@@ -92,7 +122,29 @@ const styles = {
     textDecoration: 'none',
     color: '#3498db',
     fontWeight: 'bold',
-    marginRight: '5px' // Sedikit jarak
+    marginRight: '5px'
+  },
+  // Style baru agar teks dan badge bisa sejajar rapi
+  linkContainer: {
+    textDecoration: 'none',
+    color: '#3498db',
+    fontWeight: 'bold',
+    marginRight: '5px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px'
+  },
+  // --- 4. STYLE UNTUK BADGE MERAH ---
+  notificationBadge: {
+    backgroundColor: '#e74c3c', // Merah
+    color: 'white',
+    borderRadius: '50%',
+    padding: '2px 6px',
+    fontSize: '0.75rem',
+    fontWeight: 'bold',
+    minWidth: '15px',
+    textAlign: 'center',
+    lineHeight: '1.2'
   },
   loginBtn: {
     textDecoration: 'none',
