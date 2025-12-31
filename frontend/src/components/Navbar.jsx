@@ -69,7 +69,6 @@ const Navbar = () => {
                     )}
                   </Link>
 
-                  <Link to="/rooms" style={styles.link}>🏠 Kamar</Link>
                 </>
               )}
               
