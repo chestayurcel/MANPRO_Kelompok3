@@ -61,7 +61,7 @@ const Navbar = () => {
                 <>
                   {/* --- 3. MODIFIKASI MENU PESANAN DENGAN BADGE --- */}
                   <Link to="/admin/bookings" style={styles.linkContainer}>
-                    📄 Pesanan
+                    📄 Booking/Pesanan
                     {pendingCount > 0 && (
                         <span style={styles.notificationBadge}>
                             {pendingCount}
