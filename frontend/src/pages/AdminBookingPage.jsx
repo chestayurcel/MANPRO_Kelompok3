@@ -47,6 +47,7 @@ const AdminBookingPage = () => {
             <th style={p}>Pemesan</th>
             <th style={p}>Kamar</th>
             <th style={p}>Tanggal Masuk</th>
+            <th style={p}>Bukti Bayar</th>
             <th style={p}>Status</th>
             <th style={p}>Aksi</th>
           </tr>
@@ -61,6 +62,19 @@ const AdminBookingPage = () => {
               <td style={p}>{item.Room ? item.Room.nomor_kamar : '???'}</td>
               <td style={p}>{item.tanggal_masuk}</td>
               <td style={p}>
+              <td style={p}>
+                  {item.bukti_bayar ? (
+                      <a href={`http://localhost:5000/uploads/${item.bukti_bayar}`} target="_blank" rel="noreferrer">
+                          <img 
+                            src={`http://localhost:5000/uploads/${item.bukti_bayar}`} 
+                            alt="Bukti" 
+                            style={{width: '50px', height: '50px', objectFit: 'cover', borderRadius: '5px', border: '1px solid #ccc'}}
+                          />
+                      </a>
+                  ) : (
+                      <span style={{color: '#999', fontSize: '0.8rem'}}>Belum upload</span>
+                  )}
+                </td>
                 {/* Badge Status */}
                 <span style={{
                     padding: '5px 10px', borderRadius: '15px', color: 'white', fontSize: '0.8rem', fontWeight: 'bold',
