@@ -120,9 +120,40 @@ const updateBookingStatus = async (req, res) => {
     }
 };
 
+// 5. FUNGSI UPLOAD BUKTI BAYAR
+const uploadBuktiBayar = async (req, res) => {
+    try {
+        const { id } = req.params; // ID Booking
+        
+        // Cek apakah ada file yang diupload
+        if (!req.file) {
+            return res.status(400).json({ message: 'Silakan upload file bukti pembayaran' });
+        }
+
+        const booking = await Booking.findByPk(id);
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking tidak ditemukan' });
+        }
+
+        // Simpan path/nama file ke database
+        // req.file.filename adalah nama file yang dihasilkan oleh Multer
+        await booking.update({ bukti_bayar: req.file.filename });
+
+        res.status(200).json({ 
+            success: true, 
+            message: 'Bukti pembayaran berhasil diupload',
+            data: booking 
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     createBooking,
     getMyBookings,
     getAllBookings,
-    updateBookingStatus
+    updateBookingStatus,
+    uploadBuktiBayar
 };
