@@ -36,3 +36,17 @@ export const updateBookingStatus = async (id, status) => {
     // status dikirim sebagai object { status: 'lunas' } atau { status: 'batal' }
     await axios.put(`${API_URL}/${id}`, { status }, getAuthHeader());
 };
+
+// 3. Upload Bukti Bayar
+export const uploadBuktiBayar = async (bookingId, file) => {
+    const formData = new FormData();
+    formData.append('bukti', file); // 'bukti' harus sama dengan di route backend (upload.single('bukti'))
+
+    const response = await axios.post(`${API_URL}/${bookingId}/upload`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data', // Wajib untuk upload file
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+    return response.data;
+};
