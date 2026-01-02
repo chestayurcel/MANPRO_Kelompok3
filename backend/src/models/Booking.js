@@ -14,6 +14,10 @@ const Booking = db.define('Booking', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    bukti_bayar: {
+      type: DataTypes.STRING, 
+      allowNull: true // Boleh kosong di awal (saat baru booking)
+    },
     status_pembayaran: {
         type: DataTypes.ENUM('pending', 'lunas', 'batal'),
         defaultValue: 'pending'
