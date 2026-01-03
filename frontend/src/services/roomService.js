@@ -1,11 +1,10 @@
 // frontend/src/services/roomService.js
 import axios from 'axios';
-
-const API_URL = 'http://localhost:5000/api/rooms';
+import API_BASE_URL from '../config/api';
 
 export const getAllRooms = async () => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(API_BASE_URL);
     return response.data.data;
   } catch (error) {
     console.error("Gagal mengambil data:", error);
@@ -15,7 +14,7 @@ export const getAllRooms = async () => {
 
 export const getRoomDetail = async (id) => {
   try {
-    const response = await axios.get(`${API_URL}/${id}`);
+    const response = await axios.get(`${API_BASE_URL}/${id}`);
     return response.data.data;
   } catch (error) {
     console.error("Gagal mengambil detail kamar:", error);
@@ -29,13 +28,13 @@ const getAuthHeader = () => {
 };
 
 export const createRoom = async (data) => {
-    await axios.post(API_URL, data, getAuthHeader());
+    await axios.post(API_BASE_URL, data, getAuthHeader());
 };
 
 export const updateRoom = async (id, data) => {
-    await axios.put(`${API_URL}/${id}`, data, getAuthHeader());
+    await axios.put(`${API_BASE_URL}/${id}`, data, getAuthHeader());
 };
 
 export const deleteRoom = async (id) => {
-    await axios.delete(`${API_URL}/${id}`, getAuthHeader());
+    await axios.delete(`${API_BASE_URL}/${id}`, getAuthHeader());
 };
