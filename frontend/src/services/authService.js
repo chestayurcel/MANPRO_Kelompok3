@@ -3,7 +3,7 @@ import API_BASE_URL from '../config/api';
 
 export const registerUser = async (userData) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}/register`, userData);
+        const response = await axios.post(`${API_BASE_URL}/auth/register`, userData);
         return response.data;
     } catch (error) {
         throw error.response ? error.response.data : new Error('Registrasi gagal');
@@ -12,7 +12,7 @@ export const registerUser = async (userData) => {
 
 export const loginUser = async (email, password) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}/login`, {
+        const response = await axios.post(`${API_BASE_URL}/auth/login`, {
             email,
             password
         });
