@@ -83,8 +83,8 @@ const getAllBookings = async (req, res) => {
 const updateBookingStatus = async (req, res) => {
     try {
         const { id } = req.params;
-        const { status } = req.body; // status yang dikirim: 'lunas' atau 'batal'
-
+        const status = req.body.status_pembayaran || req.body.status;
+        
         const booking = await Booking.findByPk(id);
         if (!booking) {
             return res.status(404).json({ message: 'Booking tidak ditemukan' });

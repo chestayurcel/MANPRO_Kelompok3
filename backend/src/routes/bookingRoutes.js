@@ -33,7 +33,7 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 router.post('/', verifyToken, bookingController.createBooking);
 router.get('/my-booking', verifyToken, bookingController.getMyBookings);
-router.get('/all', verifyToken, isAdmin, bookingController.getAllBookings);
+router.get('/', verifyToken, isAdmin, bookingController.getAllBookings);
 router.put('/:id', verifyToken, isAdmin, bookingController.updateBookingStatus);
 router.post('/:id/upload', verifyToken, upload.single('bukti'), bookingController.uploadBuktiBayar);
 
