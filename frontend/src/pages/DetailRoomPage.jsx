@@ -1,155 +1,145 @@
-// frontend/src/pages/DetailRoomPage.jsx
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { getRoomDetail } from '../services/roomService'; 
+import { useParams, useNavigate } from 'react-router-dom';
+import { getRoomDetail } from '../services/roomService';
+import { createBooking } from '../services/bookingService';
 import { getCurrentUser } from '../services/authService';
+import Navbar from '../components/Navbar';
+import Swal from 'sweetalert2'; // Pastikan import ini ada
 
 const DetailRoomPage = () => {
-  const { id } = useParams();
-  const navigate = useNavigate(); // Inisialisasi navigasi
-  const user = getCurrentUser();  // Ambil data user
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [room, setRoom] = useState(null);
+    const user = getCurrentUser();
 
-  const [room, setRoom] = useState(null);
-  const [loading, setLoading] = useState(true);
+    // State untuk form booking
+    const [tanggalMasuk, setTanggalMasuk] = useState('');
+    const [durasi, setDurasi] = useState(1);
 
-  // 1. Ambil Data Detail Kamar
-  useEffect(() => {
-    const fetchDetail = async () => {
-      try {
-        const data = await getRoomDetail(id);
-        setRoom(data);
-      } catch (error) {
-        console.error("Gagal ambil data:", error);
-        // Tampilkan error di console saja, jangan alert terus menerus saat loading
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDetail();
-  }, [id]);
-
-  // 2. Fungsi Handle Booking
-  const handleBooking = async (e) => {
-    if (e) e.preventDefault(); // Cegah reload halaman
-
-    // Cek Login
-    if (!user) {
-        alert('Silakan login terlebih dahulu.');
-        navigate('/login');
-        return;
-    }
-
-    // Konfirmasi
-    const isConfirmed = window.confirm(`Yakin sewa kamar ${room.nomor_kamar}?`);
-    if (!isConfirmed) return;
-
-    // Kirim ke Backend
-    try {
-        const token = localStorage.getItem('token');
-        
-        await axios.post('http://localhost:5000/api/bookings', {
-            roomId: room.id,
-            tanggal_masuk: new Date(),
-            durasi_bulan: 1 
-        }, {
-            headers: {
-                Authorization: `Bearer ${token}`
+    useEffect(() => {
+        const fetchRoom = async () => {
+            try {
+                const data = await getRoomDetail(id);
+                setRoom(data);
+            } catch (error) {
+                console.error(error);
             }
-        });
+        };
+        fetchRoom();
+    }, [id]);
 
-        alert('Booking Berhasil! 🎉');
-        navigate('/rooms'); // Pindah ke Home
+    const handleBooking = async (e) => {
+        e.preventDefault();
 
-    } catch (error) {
-        console.error("Error Booking:", error);
-        const pesan = error.response?.data?.message || error.message;
-        alert('Gagal Booking: ' + pesan);
-    }
-  };
+        if (!user) {
+            Swal.fire('Login Dulu', 'Silakan login untuk memesan kamar.', 'warning');
+            navigate('/login');
+            return;
+        }
 
-  if (loading) return <div style={{textAlign:'center', marginTop:'50px'}}>Loading Detail...</div>;
-  if (!room) return <div style={{textAlign:'center'}}>Data Kosong / Kamar Tidak Ditemukan</div>;
+        try {
+            // 1. Kirim data booking ke backend
+            await createBooking({
+                roomId: room.id,
+                tanggal_masuk: tanggalMasuk,
+                durasi_bulan: durasi
+            });
 
-  return (
-    <div style={styles.container}>
-      <Link to="/rooms" style={styles.backButton}>&larr; Kembali</Link>
-      
-      <div style={styles.grid}>
-        {/* Kolom Kiri: Foto */}
-        <div style={styles.imageContainer}>
-             <img src={room.foto_url || 'https://via.placeholder.com/400'} alt={room.nomor_kamar} style={styles.image} />
-        </div>
-
-        {/* Kolom Kanan: Info */}
-        <div style={styles.infoContainer}>
-            <h1 style={styles.title}>Kamar {room.nomor_kamar}</h1>
-            <span style={styles.badge}>{room.tipe}</span>
+            // 2. TAMPILKAN POPUP INFORMASI PEMBAYARAN (Ini Bagian Pentingnya!)
+            const totalBayar = room.harga_per_bulan * durasi;
             
-            <h2 style={styles.price}>Rp {room.harga_per_bulan.toLocaleString('id-ID')} / bulan</h2>
+            await Swal.fire({
+                title: '✅ Booking Berhasil Dibuat!',
+                html: `
+                    <div style="text-align: left; font-size: 0.95rem;">
+                        <p>Langkah selanjutnya, silakan transfer pembayaran:</p>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px dashed #333; margin: 10px 0;">
+                            <p style="margin:0; font-weight:bold; color:#555;">Total Pembayaran:</p>
+                            <h3 style="margin:5px 0; color:#27ae60;">Rp ${totalBayar.toLocaleString()}</h3>
+                            <hr style="margin:10px 0; border-top:1px solid #ddd;">
+                            <p style="margin:0; font-weight:bold; color:#555;">Transfer ke Bank BCA:</p>
+                            <h2 style="margin:5px 0; color:#2c3e50;">123-456-7890</h2>
+                            <p style="margin:0; font-size:0.9rem;">a.n. Permata Kost</p>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #e74c3c;">
+                            ⚠️ Harap simpan bukti transfer Anda!
+                        </p>
+                    </div>
+                `,
+                icon: 'info', // Ikon 'info' agar user aware ini instruksi
+                confirmButtonText: '📂 Upload Bukti Bayar',
+                confirmButtonColor: '#3498db',
+                allowOutsideClick: false
+            });
+
+            // 3. Setelah user klik OK, arahkan ke Halaman Riwayat untuk upload
+            navigate('/history');
+
+        } catch (error) {
+            Swal.fire('Gagal', error.response?.data?.message || 'Terjadi kesalahan', 'error');
+        }
+    };
+
+    if (!room) return <div>Loading...</div>;
+
+    return (
+        <>
+            {/* Navbar otomatis ada dari App.jsx, jadi tidak perlu dipanggil di sini jika sudah global */}
             
-            <div style={styles.divider}></div>
-            
-            <h3>Fasilitas:</h3>
-            <p style={styles.desc}>{room.fasilitas}</p>
-
-            <div style={styles.divider}></div>
-
-            <h3>Status:</h3>
-            <p style={{
-                color: room.status === 'tersedia' ? 'green' : 
-                       room.status === 'terisi' ? 'red' : '#f39c12', // Kuning untuk pending
-                fontWeight: 'bold',
-                fontSize: '1.2rem'
-            }}>
-                {room.status.toUpperCase()}
-            </p>
-
-            {/* Tombol Aksi */}
-            {user && user.role === 'admin' ? (
-                <div style={{marginTop: '30px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px', textAlign: 'center', border: '1px solid #ddd'}}>
-                    <p style={{color: '#555', marginBottom: '10px'}}>Anda melihat halaman ini sebagai <b>Admin</b>.</p>
-                    <button 
-                        onClick={() => navigate(`/admin/rooms/edit/${room.id}`)}
-                        style={{padding: '10px 20px', backgroundColor: '#f39c12', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold'}}
-                    >
-                        Edit Kamar Ini
-                    </button>
+            <div style={styles.container}>
+                <img src={`http://localhost:5000/uploads/${room.foto}`} alt={room.nomor_kamar} style={styles.image} />
+                
+                <div style={styles.info}>
+                    <h2>Kamar {room.nomor_kamar} - {room.tipe}</h2>
+                    <p>{room.deskripsi}</p>
+                    <h3 style={{color: '#27ae60'}}>Rp {room.harga_per_bulan.toLocaleString()} / bulan</h3>
+                    
+                    {/* FORM BOOKING */}
+                    <div style={styles.bookingBox}>
+                        <h4>Mulai Sewa</h4>
+                        <form onSubmit={handleBooking}>
+                            <div style={{marginBottom:'10px'}}>
+                                <label>Tanggal Masuk:</label>
+                                <input 
+                                    type="date" 
+                                    required 
+                                    style={styles.input}
+                                    onChange={(e) => setTanggalMasuk(e.target.value)}
+                                />
+                            </div>
+                            <div style={{marginBottom:'10px'}}>
+                                <label>Durasi (Bulan):</label>
+                                <input 
+                                    type="number" 
+                                    min="1" 
+                                    defaultValue="1" 
+                                    required 
+                                    style={styles.input}
+                                    onChange={(e) => setDurasi(e.target.value)}
+                                />
+                            </div>
+                            
+                            {room.status === 'tersedia' ? (
+                                <button type="submit" style={styles.btnBook}>Booking Sekarang</button>
+                            ) : (
+                                <button disabled style={styles.btnDisabled}>Tidak Tersedia</button>
+                            )}
+                        </form>
+                    </div>
                 </div>
-            ) : (
-                // JIKA PENGHUNI / BELUM LOGIN: Tampilkan tombol Sewa seperti biasa
-                <button 
-                    style={{
-                        ...styles.bookButton, 
-                        backgroundColor: room.status === 'tersedia' ? '#3498db' : '#ccc',
-                        cursor: room.status === 'tersedia' ? 'pointer' : 'not-allowed'
-                    }} 
-                    disabled={room.status !== 'tersedia'}
-                    onClick={handleBooking} 
-                >
-                    {room.status === 'tersedia' ? 'Ajukan Sewa Sekarang' : 
-                     room.status === 'pending' ? 'Menunggu Persetujuan' : 'Kamar Penuh'}
-                </button>
-            )}
-        </div>
-      </div>
-    </div>
-  );
+            </div>
+        </>
+    );
 };
 
 const styles = {
-  container: { maxWidth: '1000px', margin: '40px auto', padding: '20px', backgroundColor: 'white', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' },
-  backButton: { display: 'inline-block', marginBottom: '20px', textDecoration: 'none', color: '#555', fontWeight: 'bold' },
-  grid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }, 
-  imageContainer: { borderRadius: '10px', overflow: 'hidden' },
-  image: { width: '100%', height: '100%', objectFit: 'cover', minHeight: '400px' },
-  infoContainer: { display: 'flex', flexDirection: 'column', justifyContent: 'center' },
-  title: { fontSize: '2.5rem', marginBottom: '10px' },
-  badge: { backgroundColor: '#eee', padding: '5px 15px', borderRadius: '20px', width: 'fit-content', marginBottom: '15px' },
-  price: { color: '#2ecc71', fontSize: '2rem', marginBottom: '20px' },
-  desc: { lineHeight: '1.6', color: '#666' },
-  divider: { height: '1px', backgroundColor: '#eee', margin: '20px 0' },
-  bookButton: { marginTop: '30px', padding: '15px', backgroundColor: '#3498db', color: 'white', border: 'none', borderRadius: '8px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold' }
+    container: { maxWidth: '900px', margin: '40px auto', padding: '20px', display: 'flex', gap: '30px' },
+    image: { width: '400px', height: '300px', objectFit: 'cover', borderRadius: '10px' },
+    info: { flex: 1 },
+    bookingBox: { background: '#f9f9f9', padding: '20px', borderRadius: '10px', marginTop: '20px', border: '1px solid #eee' },
+    input: { width: '100%', padding: '10px', marginTop: '5px', borderRadius: '5px', border: '1px solid #ccc' },
+    btnBook: { width: '100%', padding: '12px', background: '#3498db', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' },
+    btnDisabled: { width: '100%', padding: '12px', background: '#ccc', color: '#666', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'not-allowed', marginTop: '10px' }
 };
 
 export default DetailRoomPage;

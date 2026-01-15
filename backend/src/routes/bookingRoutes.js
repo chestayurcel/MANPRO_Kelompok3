@@ -30,11 +30,13 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 // Semua route di bawah ini diproteksi oleh verifyToken
 // User harus login (punya token) baru bisa akses
-
+router.post('/offline', verifyToken, isAdmin, upload.single('bukti'), bookingController.createOfflineBooking);
 router.post('/', verifyToken, bookingController.createBooking);
 router.get('/my-booking', verifyToken, bookingController.getMyBookings);
 router.get('/', verifyToken, isAdmin, bookingController.getAllBookings);
 router.put('/:id', verifyToken, isAdmin, bookingController.updateBookingStatus);
 router.post('/:id/upload', verifyToken, upload.single('bukti'), bookingController.uploadBuktiBayar);
+
+
 
 module.exports = router;

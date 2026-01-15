@@ -66,3 +66,21 @@ export const updateBookingStatus = async (bookingId, status) => {
     });
     return response.data;
 };
+
+export const createOfflineBooking = async (data) => {
+    // Kirim data ke endpoint /offline
+    const response = await axios.post(`${API_BASE_URL}/bookings/offline`, data, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
+    return response.data;
+};
+
+export const updateBooking = async (id, data) => {
+    const response = await axiosInstance.put(`/bookings/${id}/update`, data);
+    return response.data;
+};
+
+export const cancelBooking = async (id) => {
+    const response = await axiosInstance.delete(`/bookings/${id}/cancel`);
+    return response.data;
+};
