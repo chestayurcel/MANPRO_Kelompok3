@@ -24,7 +24,9 @@ const Booking = db.define('Booking', {
     }
     // Nanti ID User dan ID Room masuk otomatis lewat Relasi (Associations)
 }, {
-    freezeTableName: true
+    tableName: 'booking',
+    freezeTableName: true,
+    timestamps: true
 });
 
 module.exports = Booking;

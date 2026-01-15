@@ -27,7 +27,9 @@ const User = db.define('User', {
         allowNull: true
     }
 }, {
-    freezeTableName: true
+    freezeTableName: true,
+    tableName: 'user',
+    timestamps: true
 });
 
 module.exports = User;

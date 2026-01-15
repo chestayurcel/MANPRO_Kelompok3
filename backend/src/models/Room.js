@@ -28,7 +28,9 @@ const Room = db.define('Room', {
         allowNull: true
     }
 }, {
-    freezeTableName: true
+    freezeTableName: true,
+    tableName: 'room',
+    timestamps: true
 });
 
 module.exports = Room;
