@@ -52,7 +52,7 @@ const RoomListPage = () => {
       {/* --- TOMBOL WHATSAPP FLOATING (BARU) --- */}
       <a 
         // GANTI NOMOR DI SINI (Gunakan 62 bukan 08)
-        href="https://wa.me/6282136221389?text=Halo%20Admin,%20saya%20tertarik%20dengan%20info%20kamar%20kost."
+        href="https://wa.me/6285742473422?text=Halo%20Admin,%20saya%20tertarik%20dengan%20info%20kamar%20kost."
         target="_blank"
         rel="noopener noreferrer"
         style={styles.waButton}
