@@ -1,4 +1,5 @@
 // Jika kamu pakai config.js / database.js
+const mysql2 = require('mysql2');
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize(
@@ -8,6 +9,7 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     dialect: 'mysql',
+    dialectModule: mysql2,
     port: process.env.DB_PORT,
     logging: false,
     dialectOptions: {
