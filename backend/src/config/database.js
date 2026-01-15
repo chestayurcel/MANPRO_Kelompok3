@@ -1,11 +1,12 @@
+// Jika kamu pakai config.js / database.js
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize(
-  process.env.railway,     // Nama DB dari Railway
-  process.env.root,     // User dari Railway
-  process.env.MNQynJELyjpDdBqaSezrtlJbNCMxbxCq, // Password dari Railway
+  process.env.DB_NAME,     // Nama DB dari Railway
+  process.env.DB_USER,     // User dari Railway
+  process.env.DB_PASSWORD, // Password dari Railway
   {
-    host: process.env.mysql.railway.internal, // Host dari Railway
+    host: process.env.DB_HOST, // Host dari Railway
     dialect: 'mysql',
     port: process.env.DB_PORT || 3306,
     logging: false
