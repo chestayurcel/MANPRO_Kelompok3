@@ -22,10 +22,6 @@ const deleteBooking = async (id) => {
 
 const AdminBookingPage = () => {
   const [bookings, setBookings] = useState([]);
-<<<<<<< HEAD
-
-  useEffect(() => { fetchBookings(); }, []);
-=======
   const [rooms, setRooms] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingBooking, setEditingBooking] = useState(null);
@@ -44,7 +40,6 @@ const AdminBookingPage = () => {
       console.error("Gagal ambil data rooms:", error);
     }
   };
->>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
 
   const fetchBookings = async () => {
     try {
@@ -57,59 +52,6 @@ const AdminBookingPage = () => {
 
   const handleStatusChange = async (id, status, userName) => {
     const action = status === 'lunas' ? 'MENYETUJUI' : 'MENOLAK';
-<<<<<<< HEAD
-    if (window.confirm(`Yakin ingin ${action} booking dari ${userName}?`)) {
-        try {
-            await updateBookingStatus(id, status);
-            fetchBookings(); 
-        } catch (error) {
-            alert('Gagal update status');
-        }
-    }
-  };
-
-  // --- FUNGSI HITUNG TANGGAL SELESAI ---
-  const hitungTanggalSelesai = (tanggalMasuk, durasi) => {
-      if (!tanggalMasuk || !durasi) return '-';
-      
-      const date = new Date(tanggalMasuk);
-      // Tambahkan bulan sesuai durasi
-      date.setMonth(date.getMonth() + parseInt(durasi));
-      
-      // Format ke Indonesia (DD MMMM YYYY)
-      return date.toLocaleDateString('id-ID', {
-          day: 'numeric', month: 'long', year: 'numeric'
-      });
-  };
-
-  // Helper untuk menampilkan bukti bayar
-  const renderBukti = (item) => {
-      if (!item.bukti_bayar) return <span style={{color:'#999', fontSize:'0.8rem'}}>Belum upload</span>;
-      
-      if (item.bukti_bayar === 'OFFLINE_TRANSACTION' || item.bukti_bayar === 'OFFLINE_BOOKING') {
-          return <span style={styles.badgeOffline}>🏢 Offline</span>;
-      }
-
-      return (
-          <a href={`http://localhost:5000/uploads/${item.bukti_bayar}`} target="_blank" rel="noreferrer">
-              <img 
-                src={`http://localhost:5000/uploads/${item.bukti_bayar}`} 
-                alt="Bukti" 
-                style={styles.thumbnail}
-                onError={(e) => {e.target.style.display='none'}}
-              />
-          </a>
-      );
-  };
-
-  return (
-    <div style={styles.container}>
-      
-      <Link to="/rooms" style={styles.btnBack}>&larr; Kembali ke Daftar Kamar</Link>
-
-      <h2 style={{marginTop: '10px', marginBottom: '20px'}}>📋 Persetujuan Booking Masuk</h2>
-      
-=======
     const result = await Swal.fire({
       title: `Yakin ingin ${action} booking dari ${userName}?`,
       text: 'Tindakan ini akan mengubah status booking.',
@@ -227,101 +169,17 @@ const AdminBookingPage = () => {
 
       <h2 style={{marginTop: '10px', marginBottom: '20px'}}>📋 Persetujuan Booking Masuk</h2>
       
->>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
       <div style={{overflowX: 'auto'}}>
         <table style={styles.table}>
             <thead style={{ background: '#34495e', color: 'white' }}>
             <tr>
-<<<<<<< HEAD
-                <th style={styles.th}>Pemesan</th>
-                <th style={styles.th}>Kamar</th>
-                <th style={styles.th}>Tgl Masuk</th>
-                <th style={styles.th}>Tgl Selesai</th> {/* KOLOM BARU */}
-                <th style={styles.th}>Bukti Bayar</th>
-                <th style={styles.th}>Status</th>
-                <th style={styles.th}>Aksi</th>
-=======
                 <th style={styles.th}>Pemesan</th><th style={styles.th}>Kamar</th><th style={styles.th}>Tgl Masuk</th><th style={styles.th}>Tgl Selesai</th><th style={styles.th}>Bukti Bayar</th><th style={styles.th}>Status</th><th style={styles.th}>Aksi</th>
->>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
             </tr>
             </thead>
             <tbody>
             {bookings.length > 0 ? (
                 bookings.map((item) => (
                     <tr key={item.id} style={{ borderBottom: '1px solid #eee' }}>
-<<<<<<< HEAD
-                    
-                    {/* 1. PEMESAN */}
-                    <td style={styles.td}>
-                        <div style={{fontWeight:'bold'}}>{item.User ? item.User.nama : 'User Dihapus'}</div>
-                        <div style={{fontSize:'0.85rem', color:'#666'}}>{item.User?.no_hp}</div>
-                    </td>
-
-                    {/* 2. KAMAR */}
-                    <td style={styles.td}>
-                        <span style={styles.roomBadge}>{item.Room ? item.Room.nomor_kamar : '???'}</span>
-                    </td>
-
-                    {/* 3. TGL MASUK */}
-                    <td style={styles.td}>
-                        {item.tanggal_masuk}
-                    </td>
-
-                    {/* 4. TGL SELESAI (NEW) */}
-                    <td style={styles.td}>
-                        <span style={{color: '#2980b9', fontWeight: '500'}}>
-                            {hitungTanggalSelesai(item.tanggal_masuk, item.durasi_bulan)}
-                        </span>
-                        <div style={{fontSize:'0.75rem', color:'#888'}}>
-                            ({item.durasi_bulan} Bulan)
-                        </div>
-                    </td>
-
-                    {/* 5. BUKTI BAYAR */}
-                    <td style={styles.td}>
-                        {renderBukti(item)}
-                    </td>
-
-                    {/* 6. STATUS */}
-                    <td style={styles.td}>
-                        <span style={{
-                            padding: '5px 10px', 
-                            borderRadius: '20px', 
-                            color: 'white', 
-                            fontSize: '0.75rem', 
-                            fontWeight: 'bold',
-                            backgroundColor: 
-                                item.status_pembayaran === 'lunas' ? '#2ecc71' : 
-                                item.status_pembayaran === 'batal' ? '#e74c3c' : '#f1c40f'
-                        }}>
-                            {item.status_pembayaran.toUpperCase()}
-                        </span>
-                    </td>
-
-                    {/* 7. AKSI (UPDATED) */}
-                    <td style={styles.td}>
-                        {item.status_pembayaran === 'pending' ? (
-                            <div style={{display:'flex', gap:'5px'}}>
-                                <button 
-                                    onClick={() => handleStatusChange(item.id, 'lunas', item.User?.nama)}
-                                    title="Setujui"
-                                    style={styles.btnApprove}>✓</button>
-                                <button 
-                                    onClick={() => handleStatusChange(item.id, 'batal', item.User?.nama)}
-                                    title="Tolak"
-                                    style={styles.btnReject}>✕</button>
-                            </div>
-                        ) : (
-                            // LOGIKA TEXT DISETUJUI / DITOLAK
-                            <span style={{
-                                fontWeight: 'bold',
-                                color: item.status_pembayaran === 'lunas' ? '#2ecc71' : '#e74c3c'
-                            }}>
-                                {item.status_pembayaran === 'lunas' ? '✅ Disetujui' : '❌ Ditolak'}
-                            </span>
-                        )}
-                    </td>
-=======
                         <td style={styles.td}>
                             <div style={{fontWeight:'bold'}}>{item.User ? item.User.nama : 'User Dihapus'}</div>
                             <div style={{fontSize:'0.85rem', color:'#666'}}>{item.User?.no_hp}</div>
@@ -388,7 +246,6 @@ const AdminBookingPage = () => {
                                     style={styles.btnDelete}>🗑️</button>
                             </div>
                         </td>
->>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
                     </tr>
                 ))
             ) : (
@@ -397,8 +254,6 @@ const AdminBookingPage = () => {
             </tbody>
         </table>
       </div>
-<<<<<<< HEAD
-=======
 
       {/* EDIT MODAL */}
       {showEditModal && (
@@ -444,7 +299,6 @@ const AdminBookingPage = () => {
           </div>
         </div>
       )}
->>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
     </div>
   );
 };
@@ -461,11 +315,6 @@ const styles = {
     btnBack: { display: 'inline-block', marginBottom: '10px', textDecoration: 'none', color: '#555', fontWeight: 'bold' },
     roomBadge: { backgroundColor: '#eaf2f8', color: '#2980b9', padding: '4px 8px', borderRadius: '4px', fontWeight: 'bold', fontSize: '0.9rem' },
     badgeOffline: { backgroundColor: '#95a5a6', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem' },
-<<<<<<< HEAD
-    
-    btnApprove: { padding: '8px 12px', background: '#2ecc71', color: 'white', border:'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' },
-    btnReject: { padding: '8px 12px', background: '#e74c3c', color: 'white', border:'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }
-=======
 
     btnApprove: { padding: '8px 12px', background: '#2ecc71', color: 'white', border:'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' },
     btnReject: { padding: '8px 12px', background: '#e74c3c', color: 'white', border:'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' },
@@ -479,7 +328,6 @@ const styles = {
     modalButtons: { display: 'flex', justifyContent: 'space-between', marginTop: '20px' },
     btnSave: { padding: '10px 20px', background: '#2ecc71', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' },
     btnCancel: { padding: '10px 20px', background: '#95a5a6', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }
->>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
 };
 
 export default AdminBookingPage;

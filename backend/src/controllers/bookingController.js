@@ -1,66 +1,12 @@
-<<<<<<< HEAD
 const bcrypt = require('bcryptjs');
 const { Booking, Room, User } = require('../models');
-=======
 const bookingService = require('../services/bookingService');
->>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
 
 // FITUR UNTUK PENGHUNI (USER)
 // 1. MEMBUAT BOOKING BARU
 const createBooking = async (req, res) => {
     try {
         const { roomId, tanggal_masuk, durasi_bulan } = req.body;
-<<<<<<< HEAD
-        const userId = req.user.id; 
-
-        // ============================================================
-        // 1. CEK DOUBLE BOOKING (LOGIKA BARU ✨)
-        // ============================================================
-        const existingBooking = await Booking.findOne({
-            where: {
-                userId: userId,           // User yang sama
-                roomId: roomId,           // Kamar yang sama
-                status_pembayaran: 'pending' // Masih menunggu konfirmasi
-            }
-        });
-
-        if (existingBooking) {
-            return res.status(400).json({ 
-                message: 'Anda sudah mem-booking kamar ini. Mohon tunggu konfirmasi admin atau cek riwayat Anda.' 
-            });
-        }
-
-        // ============================================================
-        // 2. CEK KETERSEDIAAN KAMAR (LANJUTAN BIASA)
-        // ============================================================
-        const room = await Room.findByPk(roomId);
-        if (!room) return res.status(404).json({ message: 'Kamar tidak ditemukan' });
-
-        if (room.status !== 'tersedia') {
-            return res.status(400).json({ message: 'Maaf, kamar ini baru saja terisi.' });
-        }
-
-        const total_harga = room.harga_per_bulan * durasi_bulan;
-
-        // 3. BUAT BOOKING BARU
-        const newBooking = await Booking.create({
-            userId, 
-            roomId, 
-            tanggal_masuk, 
-            durasi_bulan, 
-            total_harga,
-            status_pembayaran: 'pending' 
-        });
-
-        // Ingat: Jangan ubah status Room jadi 'pending' (sesuai diskusi sebelumnya)
-        // Biarkan tetap 'tersedia' agar user lain masih bisa lihat, 
-        // tapi user INI tidak bisa spam booking lagi.
-
-        res.status(201).json({ 
-            success: true, 
-            message: 'Booking berhasil! Silakan lakukan pembayaran.', 
-            data: newBooking 
-=======
         const userId = req.user.id;
 
         const newBooking = await bookingService.createBooking(userId, roomId, tanggal_masuk, durasi_bulan);
@@ -69,7 +15,6 @@ const createBooking = async (req, res) => {
             success: true,
             message: 'Booking berhasil! Silakan lakukan pembayaran.',
             data: newBooking
->>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
         });
 
     } catch (error) {
@@ -101,35 +46,6 @@ const getAllBookings = async (req, res) => {
     }
 };
 
-<<<<<<< HEAD
-// 4. UPDATE STATUS BOOKING
-const updateBookingStatus = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const status = req.body.status_pembayaran || req.body.status;
-
-        const booking = await Booking.findByPk(id);
-        if (!booking) return res.status(404).json({ message: 'Booking tidak ditemukan' });
-
-        // Update status booking (Lunas/Batal)
-        await booking.update({ status_pembayaran: status });
-
-        // LOGIKA BARU:
-        // Jika Admin MENYETUJUI (Lunas), barulah kita kunci kamarnya (Status Room jadi 'terisi')
-        if (status === 'lunas') {
-            await Room.update({ status: 'terisi' }, { where: { id: booking.roomId } });
-            
-            // (Opsional) Tolak bookingan lain untuk kamar yang sama secara otomatis?
-            // Bisa ditambahkan nanti kalau perlu.
-        }
-        
-        // Jika Batal, pastikan kamar tetap 'tersedia'
-        if (status === 'batal') {
-            await Room.update({ status: 'tersedia' }, { where: { id: booking.roomId } });
-        }
-
-        res.status(200).json({ success: true, message: `Status berhasil diubah menjadi ${status}` });
-=======
 // 4. UPDATE BOOKING (STATUS OR DETAILS)
 const updateBookingStatus = async (req, res) => {
     try {
@@ -177,7 +93,6 @@ const updateBookingStatus = async (req, res) => {
         }
 
         res.status(200).json({ success: true, message: 'Booking berhasil diupdate' });
->>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
 
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -200,54 +115,6 @@ const uploadBuktiBayar = async (req, res) => {
             message: 'Bukti pembayaran berhasil diupload',
             data: booking
         });
-
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
-
-const createOfflineBooking = async (req, res) => {
-    try {
-        const { nama, email, no_hp, roomId, tanggal_masuk, durasi_bulan } = req.body;
-        const bukti_bayar = req.file ? req.file.filename : 'OFFLINE_TRANSACTION';
-
-        const newBooking = await bookingService.createOfflineBooking(nama, email, no_hp, roomId, tanggal_masuk, durasi_bulan, bukti_bayar);
-
-        res.status(201).json({
-            success: true,
-            message: 'Booking offline berhasil disimpan!',
-            data: newBooking
-        });
-
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
-
-const updateBookingByUser = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { tanggal_masuk, durasi_bulan } = req.body;
-        const userId = req.user.id;
-
-        await bookingService.updateBookingByUser(id, userId, tanggal_masuk, durasi_bulan);
-
-        res.json({ success: true, message: 'Data booking berhasil diperbarui!' });
-
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
-
-// 8. USER CANCEL BOOKING
-const cancelBookingByUser = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const userId = req.user.id;
-
-        await bookingService.cancelBookingByUser(id, userId);
-
-        res.json({ success: true, message: 'Booking berhasil dibatalkan.' });
 
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -354,7 +221,6 @@ const updateBookingByUser = async (req, res) => {
     }
 };
 
-// 8. USER CANCEL BOOKING
 const cancelBookingByUser = async (req, res) => {
     try {
         const { id } = req.params;
@@ -384,12 +250,7 @@ module.exports = {
     updateBookingStatus,
     uploadBuktiBayar,
     createOfflineBooking,
-<<<<<<< HEAD
-    updateBookingByUser, // <-- Tambah ini
-    cancelBookingByUser
-=======
     updateBookingByUser,
     cancelBookingByUser,
     deleteBookingByAdmin
->>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
 };
