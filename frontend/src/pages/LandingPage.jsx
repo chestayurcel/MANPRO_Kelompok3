@@ -74,7 +74,7 @@ const LandingPage = () => {
                 <div style={styles.divider}></div>
                 <div style={styles.contactInfo}>
                   <p><strong>Operasional:</strong> 08:00 - 21:00 WIB</p>
-                  <p><strong>Kontak:</strong> +62 812-3456-7890</p>
+                  <p><strong>Kontak:</strong> +6285742473422</p>
                 </div>
                 <a 
                   href="https://maps.google.com/maps?z=16&t=m&hl=id&gl=ID&mapclient=embed&q=7%C2%B053%2731.2%22S+110%C2%B002%2730.2%22E@-7.892001,110.041728" 
