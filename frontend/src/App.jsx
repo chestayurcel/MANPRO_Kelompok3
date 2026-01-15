@@ -9,6 +9,8 @@ import FormRoomPage from './pages/FormRoomPage';
 import LandingPage from './pages/LandingPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminBookingPage from './pages/AdminBookingPage';
+import AdminPenghuniPage from './pages/AdminPenghuniPage';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
@@ -25,6 +27,11 @@ function App() {
         <Route path="/admin/rooms/new" element={<FormRoomPage />} />
         <Route path="/admin/rooms/edit/:id" element={<FormRoomPage />} />
         <Route path="/admin/bookings" element={<AdminBookingPage />} />
+        <Route path="/admin/input-penghuni" element={
+          <PrivateRoute isAdmin={true}>
+            <AdminPenghuniPage />
+          </PrivateRoute>
+        } />
       </Routes>
     </Router>
   );

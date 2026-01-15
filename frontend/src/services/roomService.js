@@ -36,15 +36,43 @@ const getAuthHeader = () => {
 };
 
 export const createRoom = async (roomData) => {
-    const response = await axios.post(`${API_BASE_URL}/rooms`, roomData, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    const formData = new FormData();
+
+    // Append all fields to FormData
+    Object.keys(roomData).forEach(key => {
+        if (key === 'foto' && roomData[key]) {
+            formData.append('foto', roomData[key]);
+        } else if (roomData[key] !== null && roomData[key] !== undefined) {
+            formData.append(key, roomData[key]);
+        }
+    });
+
+    const response = await axios.post(`${API_BASE_URL}/rooms`, formData, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data'
+        }
     });
     return response.data;
 };
 
 export const updateRoom = async (id, roomData) => {
-    const response = await axios.put(`${API_BASE_URL}/rooms/${id}`, roomData, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    const formData = new FormData();
+
+    // Append all fields to FormData
+    Object.keys(roomData).forEach(key => {
+        if (key === 'foto' && roomData[key]) {
+            formData.append('foto', roomData[key]);
+        } else if (roomData[key] !== null && roomData[key] !== undefined) {
+            formData.append(key, roomData[key]);
+        }
+    });
+
+    const response = await axios.put(`${API_BASE_URL}/rooms/${id}`, formData, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data'
+        }
     });
     return response.data;
 };

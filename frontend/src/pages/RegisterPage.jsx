@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { registerUser } from '../services/authService';
+import Swal from 'sweetalert2';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -29,8 +30,16 @@ const RegisterPage = () => {
 
     try {
       await registerUser(formData);
-      alert('Registrasi Berhasil! Silakan Login. 🎉');
-      navigate('/login'); // Lempar ke halaman login setelah sukses
+      Swal.fire({
+        title: 'Registrasi Berhasil! 🎉',
+        text: 'Akun Anda telah dibuat. Silakan login.',
+        icon: 'success',
+        confirmButtonText: 'Ke Login',
+        timer: 2000,
+        timerProgressBar: true
+      }).then(() => {
+        navigate('/login'); // Lempar ke halaman login setelah sukses
+      });
     } catch (err) {
       setError(err.message || 'Gagal mendaftar.');
     }

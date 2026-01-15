@@ -3,21 +3,33 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { getCurrentUser } from '../services/authService';
 import { deleteRoom } from '../services/roomService';
+import Swal from 'sweetalert2';
 
 const RoomCard = ({ room }) => {
     const user = getCurrentUser();
 
     const handleDelete = async () => {
-    if (window.confirm(`Yakin ingin menghapus Kamar ${room.nomor_kamar} selamanya?`)) {
-      try {
-        await deleteRoom(room.id);
-        alert('Kamar berhasil dihapus');
-        window.location.reload(); // Refresh halaman agar kartu hilang
-      } catch (error) {
-        alert('Gagal menghapus kamar');
+      const result = await Swal.fire({
+        title: `Yakin ingin menghapus Kamar ${room.nomor_kamar}?`,
+        text: 'Tindakan ini tidak bisa dibatalkan.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Hapus',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#e74c3c',
+        cancelButtonColor: '#95a5a6'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          await deleteRoom(room.id);
+          Swal.fire('Terhapus!', 'Kamar berhasil dihapus.', 'success');
+          window.location.reload(); // Refresh halaman agar kartu hilang
+        } catch (error) {
+          Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus kamar.', 'error');
+        }
       }
-    }
-  };
+    };
 
   const getBadgeStyle = (status) => {
       if (status === 'tersedia') return styles.badgeGreen;
