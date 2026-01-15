@@ -35,7 +35,12 @@ router.post('/', verifyToken, bookingController.createBooking);
 router.get('/my-booking', verifyToken, bookingController.getMyBookings);
 router.get('/', verifyToken, isAdmin, bookingController.getAllBookings);
 router.put('/:id', verifyToken, isAdmin, bookingController.updateBookingStatus);
+router.put('/:id/update', verifyToken, bookingController.updateBookingByUser);
+router.delete('/:id/cancel', verifyToken, bookingController.cancelBookingByUser);
 router.post('/:id/upload', verifyToken, upload.single('bukti'), bookingController.uploadBuktiBayar);
+router.delete('/:id', verifyToken, isAdmin, bookingController.deleteBookingByAdmin);
+
+
 
 
 

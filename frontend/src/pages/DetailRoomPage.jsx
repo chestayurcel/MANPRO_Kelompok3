@@ -87,7 +87,11 @@ const DetailRoomPage = () => {
             {/* Navbar otomatis ada dari App.jsx, jadi tidak perlu dipanggil di sini jika sudah global */}
             
             <div style={styles.container}>
+<<<<<<< HEAD
                 <img src={`http://localhost:5000/uploads/${room.foto}`} alt={room.nomor_kamar} style={styles.image} />
+=======
+                <img src={room.foto_url || 'https://via.placeholder.com/400'} alt={room.nomor_kamar} style={styles.image} />
+>>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
                 
                 <div style={styles.info}>
                     <h2>Kamar {room.nomor_kamar} - {room.tipe}</h2>

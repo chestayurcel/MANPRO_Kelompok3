@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { loginUser } from '../services/authService';
+import Swal from 'sweetalert2';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -14,8 +15,16 @@ const LoginPage = () => {
 
     try {
       await loginUser(email, password);
-      alert('Login Berhasil! 🎉');
-      navigate('/rooms'); // Pindahkan user ke halaman Home
+      Swal.fire({
+        title: 'Login Berhasil! 🎉',
+        text: 'Selamat datang di Permata Kost',
+        icon: 'success',
+        confirmButtonText: 'Lanjut',
+        timer: 2000,
+        timerProgressBar: true
+      }).then(() => {
+        navigate('/rooms'); // Pindahkan user ke halaman Home
+      });
     } catch (err) {
       setError(err.message || 'Login Gagal, cek email/password!');
     }

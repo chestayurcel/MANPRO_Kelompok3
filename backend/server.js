@@ -24,12 +24,12 @@ const startServer = async () => {
     try {
         await db.authenticate();
         console.log('✅ Database connected');
-        
-        await db.sync({ alter: true }); 
+
+        await db.sync({ alter: true });
         console.log('✅ Tables created/updated successfully!');
-        
+
         app.listen(PORT, () => {
-            console.log(`🚀 Server running on port ${PORT}`);
+            console.log(`🚀 HTTP Server running on http://localhost:${PORT}`);
         });
     } catch (error) {
         console.error('❌ Error:', error);

@@ -13,9 +13,9 @@ const FormRoomPage = () => {
     tipe: 'Regular (Non-AC)',
     harga_per_bulan: '',
     fasilitas: '',
-    foto_url: '',
     status: 'tersedia'
   });
+  const [selectedFile, setSelectedFile] = useState(null);
 
   // Kalau mode Edit, isi form dengan data lama
   useEffect(() => {
@@ -26,9 +26,9 @@ const FormRoomPage = () => {
             tipe: data.tipe,
             harga_per_bulan: data.harga_per_bulan,
             fasilitas: data.fasilitas,
-            foto_url: data.foto_url,
             status: data.status
         });
+        // Note: foto_url is not set in formData for edit mode since we're using file upload
       });
     }
   }, [id, isEdit]);
@@ -37,14 +37,23 @@ const FormRoomPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+        const dataToSend = { ...formData };
+        if (selectedFile) {
+            dataToSend.foto = selectedFile;
+        }
+
         if (isEdit) {
-            await updateRoom(id, formData);
+            await updateRoom(id, dataToSend);
             alert('Kamar berhasil diupdate!');
         } else {
-            await createRoom(formData);
+            await createRoom(dataToSend);
             alert('Kamar berhasil dibuat!');
         }
         navigate('/rooms');
@@ -69,7 +78,8 @@ const FormRoomPage = () => {
         
         <textarea name="fasilitas" placeholder="Fasilitas (Pisahkan dengan koma)" value={formData.fasilitas} onChange={handleChange} rows="3" style={inputStyle}></textarea>
         
-        <input type="text" name="foto_url" placeholder="URL Foto (Link Gambar)" value={formData.foto_url} onChange={handleChange} style={inputStyle} />
+        <input type="file" name="foto" accept="image/*" onChange={handleFileChange} style={inputStyle} />
+        {isEdit && <p style={{ fontSize: '12px', color: '#666' }}>Upload foto baru jika ingin mengganti foto yang ada</p>}
 
         <select name="status" value={formData.status} onChange={handleChange} style={inputStyle}>
             <option value="tersedia">Tersedia</option>

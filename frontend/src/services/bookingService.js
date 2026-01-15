@@ -76,11 +76,23 @@ export const createOfflineBooking = async (data) => {
 };
 
 export const updateBooking = async (id, data) => {
+<<<<<<< HEAD
     const response = await axiosInstance.put(`/bookings/${id}/update`, data);
+=======
+    const response = await axios.put(`${URL_BOOKING}/${id}/update`, data, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
+>>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
     return response.data;
 };
 
 export const cancelBooking = async (id) => {
+<<<<<<< HEAD
     const response = await axiosInstance.delete(`/bookings/${id}/cancel`);
+=======
+    const response = await axios.delete(`${URL_BOOKING}/${id}/cancel`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
+>>>>>>> de57c666616990a80c38fa833bca6d9d0e36dba3
     return response.data;
 };
